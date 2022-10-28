@@ -2,6 +2,9 @@
 // 实现戳一戳交互功能，支持返回文字图片语音禁言，其中语音需配置ffmpeg
 // 构成部分分为普通事件（文字）与特殊事件（图片以及语音以及禁言事件）
 // 每一份文字占一份随机概率，每个事件占一份概率
+
+//AJohn修改版
+
 import plugin from'../../lib/plugins/plugin.js'
 import{segment}from'oicq'
 import cfg from'../../lib/config/config.js'
@@ -18,7 +21,17 @@ let word_list=['好 好奇怪的感觉呢 羞o(*////▽////*)q',
 '不要戳我啦(#`O′)',
 '不可以总戳的哦，不然的话，咱会想那个的wwww',
 '不要这样...好，好痛',
-'达咩~']
+'达咩~',
+'不要碰我！',
+'德丽莎世界第一可爱！',
+'亲一下(。•ω•。)ノ♡',
+'(°ー°〃)',
+'再戳我就要告诉主人啦！ヽ(*。>Д<)o゜',
+'你欺负我╥﹏╥',
+'(ꐦÒ‸Ó)你个老六！',
+'没有这种操作了(。・`ω´・)',
+'戳了我，就是我的人了！Ｏ(≧▽≦)Ｏ ',
+'(๑•॒̀ ູ॒•́๑)啦啦啦，哒哒哒',]
 
 //回复语音列表 默认是芭芭拉的语音 可以复制到网址里面去改，然后再复制回来 
 //语音合成来源：https://github.com/w4123/vits
@@ -63,7 +76,7 @@ async chuoyichuo (e){
     if(e.target_id == cfg.qq){
         
         //文字列表长度加上6个特殊事件，如修改elif数量记得修改此数字
-        let standard = word_list['length'] + 6
+        let standard = word_list['length'] + 7
         
         //生成1~standard的随机值
         let random = Math.ceil(Math.random()*standard)
@@ -72,7 +85,7 @@ async chuoyichuo (e){
         if(random == standard){
             //生成随机图片路径 注意最后的7要改成自己的图片数量
             //注意：你的表情包命名需要按数字增加，如：1.jpg 2.jpg 3.jpg 
-            let photo_number = Math.ceil(Math.random() * 7)
+            let photo_number = Math.ceil(Math.random() * 4)
             e.reply(segment.image('file:///' + _path + '/resources/chuochuo/'+ photo_number + '.jpg'))
         }
         
@@ -82,7 +95,7 @@ async chuoyichuo (e){
             await common.sleep(1000)
             await e.group.muteMember(e.operator_id,60);
             await common.sleep(3000)
-            e.reply('啧')
+            e.reply('哼')
         }
         
         //戳回去
@@ -114,6 +127,13 @@ async chuoyichuo (e){
             let url = url_list[url_number-1]
             console.log(url)
             await e.reply(segment.record(url))
+        }
+
+        else if(random == standard - 6) {
+            //生成随机图片路径 注意最后的7要改成自己的图片数量
+            //注意：你的表情包命名需要按数字增加，如：1.gif 2.gif 3.gif 
+            let photo_number = Math.ceil(Math.random() * 1)
+            e.reply(segment.image('file:///' + _path + '/resources/chuochuogif/'+ photo_number + '.gif'))
         }
         
         //回复随机文本
